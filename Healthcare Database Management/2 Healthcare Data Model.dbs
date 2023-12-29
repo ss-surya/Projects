@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Disease Model" id="Project-1989" database="LogicalDesign" >
+	<comment><![CDATA[Module 5 Assignment 2 - Disease Model]]></comment>
+	<schema name="INSTANCE" catalogname="Disease Model" >
+		<table name="Diagnosis" prior="entity" >
+			<comment><![CDATA[Record of Patient and Diagnosed disease]]></comment>
+			<column name="Diagnosis_ID" prior="Diagnosis ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Diagnosis]]></comment>
+			</column>
+			<column name="Diagnosis_Date" prior="Diagnosis_Date_ID" type="DATE" jt="91" mandatory="y" >
+				<comment><![CDATA[Date of Diagnosis]]></comment>
+			</column>
+			<column name="Patient_ID" prior="Patient ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Patient]]></comment>
+			</column>
+			<column name="Doctor_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Doctor]]></comment>
+			</column>
+			<column name="Disease_ID" prior="Disease ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Disease]]></comment>
+			</column>
+			<column name="Prescription_ID" prior="Medicine_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Prescription]]></comment>
+			</column>
+			<column name="Disease_Severity_Code" prior="Disease_Severity" type="INT" length="10" jt="4" mandatory="y" >
+				<comment><![CDATA[Code of Severity of the disease diagnoised]]></comment>
+			</column>
+			<column name="Weight_kg" type="DECIMAL" jt="3" mandatory="y" >
+				<comment><![CDATA[Weight in kg]]></comment>
+			</column>
+			<column name="Temperature_F" type="DECIMAL" jt="3" mandatory="y" >
+				<comment><![CDATA[Temperature Reading in Farenheit]]></comment>
+			</column>
+			<column name="Systolic_Blood_Pressure_mmHg" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Hi Blood Pressure in mmHg]]></comment>
+			</column>
+			<column name="Diastolic_Blood_Pressure_mmHg" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Lo Blood Pressure in mm Hg]]></comment>
+			</column>
+			<index name="unq_Doctor_ID" unique="UNIQUE_INDEX" >
+				<column name="Diagnosis_ID" />
+			</index>
+			<fk name="fk_diagnosis_disease" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Disease" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Disease_ID" pk="Disease_ID" />
+			</fk>
+			<fk name="fk_diagnosis_patient" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Patient" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Patient_ID" pk="Patient_ID" />
+			</fk>
+			<fk name="fk_diagnosis_doctor" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Doctor" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Doctor_ID" pk="Doctor_ID" />
+			</fk>
+			<fk name="fk_diagnosis_disease_severity" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Disease_Severity" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Disease_Severity_Code" pk="Disease_Severity_Code" />
+			</fk>
+			<fk name="fk_diagnosis_prescription" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Prescription" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Prescription_ID" pk="Medicine_ID" />
+			</fk>
+		</table>
+		<table name="Disease" prior="entity" >
+			<comment><![CDATA[Record of Disease]]></comment>
+			<column name="Disease_ID" prior="Disease ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Disease]]></comment>
+			</column>
+			<column name="Disease_Name" prior="Disease Name" type="VARCHAR" length="50" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of Disease]]></comment>
+			</column>
+			<column name="Disease_Description" prior="Description" type="VARCHAR" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[Details of Disease]]></comment>
+			</column>
+			<index name="pk_disease" unique="PRIMARY_KEY" >
+				<column name="Disease_ID" />
+			</index>
+		</table>
+		<table name="Disease_Severity" prior="Code of Severity of the disease diagnoised" >
+			<comment><![CDATA[Details of Disease Severity]]></comment>
+			<column name="Disease_Severity_Code" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Code of Severity of the disease diagnoised]]></comment>
+			</column>
+			<column name="Disease_Severity" type="VARCHAR" length="10" jt="12" mandatory="y" >
+				<comment><![CDATA[Severity of the disease diagnoised]]></comment>
+			</column>
+			<index name="pk_code of severity of the disease diagnoised" unique="PRIMARY_KEY" >
+				<column name="Disease_Severity_Code" />
+			</index>
+		</table>
+		<table name="Doctor" prior="entity" >
+			<comment><![CDATA[Record of Doctors]]></comment>
+			<column name="Doctor_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Doctor]]></comment>
+			</column>
+			<column name="Doctor_Name" type="VARCHAR" length="50" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the doctor]]></comment>
+			</column>
+			<column name="Doctor_Speciality" type="VARCHAR" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[Speciality area of the Doctor]]></comment>
+			</column>
+			<column name="Experience_Years" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Years of experience of the doctor]]></comment>
+			</column>
+			<index name="pk_doctor" unique="PRIMARY_KEY" >
+				<column name="Doctor_ID" />
+			</index>
+		</table>
+		<table name="Location" prior="entity_0" >
+			<column name="Location_ID" prior="Loaction_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Location]]></comment>
+			</column>
+			<column name="City_Name" type="VARCHAR" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the city]]></comment>
+			</column>
+			<column name="State_Name" prior="State Name" type="VARCHAR" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the state]]></comment>
+			</column>
+			<column name="Country_Name" prior="Country Name" type="VARCHAR" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the country]]></comment>
+			</column>
+			<index name="pk_location" unique="PRIMARY_KEY" >
+				<column name="Location_ID" />
+			</index>
+		</table>
+		<table name="Medical_Facility" prior="entity" >
+			<column name="Facility_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Medical Facility]]></comment>
+			</column>
+			<column name="Facility_Name" type="VARCHAR" length="100" jt="12" >
+				<comment><![CDATA[Name of Medical Facility]]></comment>
+			</column>
+			<index name="pk_medical_facility" unique="PRIMARY_KEY" >
+				<column name="Facility_ID" />
+			</index>
+		</table>
+		<table name="Medicine" prior="Medication" >
+			<comment><![CDATA[Record of Medicine]]></comment>
+			<column name="Medicine ID" prior="Medication_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Medicine]]></comment>
+			</column>
+			<column name="Medicine_Name" prior="Medication_Name" type="VARCHAR" length="50" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of Medicine]]></comment>
+			</column>
+			<column name="Dosage_Description" prior="Dosage_Count" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Doasge Descriptionof Medication]]></comment>
+			</column>
+			<column name="Medicine_Manufacturer" prior="Medicine_Manufacturer_Name" type="VARCHAR" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[Manufacturer of Medicine]]></comment>
+			</column>
+			<column name="Active_Ingredient_Name" type="VARCHAR" length="100" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of Active Ingredient of medicine]]]></comment>
+			</column>
+			<index name="pk_medication" unique="PRIMARY_KEY" >
+				<column name="Medicine ID" />
+			</index>
+		</table>
+		<table name="Patient" prior="Patient D" >
+			<comment><![CDATA[Record of Patients]]></comment>
+			<column name="Patient_ID" prior="Patient ID" type="INT" length="100" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Patient]]></comment>
+			</column>
+			<column name="Patient_Name" prior="Name" type="VARCHAR" length="50" jt="12" mandatory="y" >
+				<comment><![CDATA[Name of the Patient]]></comment>
+			</column>
+			<column name="Patient_Age" prior="Age" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Age of the Patient]]></comment>
+			</column>
+			<column name="Patient_Gender" prior="Gender" type="VARCHAR" length="10" jt="12" mandatory="y" >
+				<comment><![CDATA[Gender of the Patient]]></comment>
+			</column>
+			<column name="Patient_Location_ID" prior="Patient_Address" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Location of the Patient]]></comment>
+			</column>
+			<index name="unq_Patient_ID" unique="UNIQUE_INDEX" >
+				<column name="Patient_ID" />
+			</index>
+			<index name="pk_patient" unique="PRIMARY_KEY" >
+				<column name="Patient_ID" />
+			</index>
+			<fk name="fk_patient_location" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Location" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Patient_Location_ID" pk="Location_ID" />
+			</fk>
+		</table>
+		<table name="Pharmacy_Inventory" prior="Pharmacy" >
+			<column name="Inventory_Date" prior="Date" type="DATE" jt="91" mandatory="y" >
+				<comment><![CDATA[Date]]></comment>
+			</column>
+			<column name="Medicine_ID" prior="Medidine_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for medicine]]></comment>
+			</column>
+			<column name="Instock_Indicator" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Indicator indicates 1 if medicine is in stock in the given date else 0]]></comment>
+			</column>
+			<index name="pk_pharmacy" unique="PRIMARY_KEY" >
+				<column name="Inventory_Date" />
+				<column name="Medicine_ID" />
+			</index>
+			<fk name="fk_pharmacy_medicine" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Medicine" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Medicine_ID" pk="Medicine ID" />
+			</fk>
+		</table>
+		<table name="Prescription" prior="entity" >
+			<column name="Prescription_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Prescription]]></comment>
+			</column>
+			<column name="Prescription_Line_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Indicates each line in prescription]]></comment>
+			</column>
+			<column name="Medicine_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Medicine]]></comment>
+			</column>
+			<column name="Prescribed_Dosage_Description" prior="Dosage_Description" type="VARCHAR" length="50" jt="12" mandatory="y" >
+				<comment><![CDATA[Prescribed Doasge Description of Medication]]></comment>
+			</column>
+			<index name="pk_prescription" unique="PRIMARY_KEY" >
+				<column name="Prescription_ID" />
+			</index>
+			<fk name="fk_prescription_medicine" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Medicine" type="ManyToMany" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Medicine_ID" pk="Medicine ID" />
+			</fk>
+		</table>
+		<table name="Prescription_Medication" prior="entity_0" >
+			<comment><![CDATA[Prescription MEdication Mapping]]></comment>
+			<column name="Prescription_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for prescription]]></comment>
+			</column>
+			<column name="Medicine ID" prior="Medication_ID" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique Identifier for Medication]]></comment>
+			</column>
+			<index name="pk_prescription_medication" unique="PRIMARY_KEY" >
+				<column name="Prescription_ID" />
+				<column name="Medicine ID" />
+			</index>
+			<fk name="fk_prescription_medication_medication" virtual="y" to_schema="Disease Model.INSTANCE" to_table="Medicine" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="Medicine ID" pk="Medicine ID" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Data Model" id="Layout-2a2" show_relation="columns" >
+		<comment><![CDATA[Healthcare Data Model]]></comment>
+		<entity schema="Disease Model.INSTANCE" name="Diagnosis" color="C1D8EE" x="320" y="608" />
+		<entity schema="Disease Model.INSTANCE" name="Disease" color="C1D8EE" x="48" y="656" />
+		<entity schema="Disease Model.INSTANCE" name="Disease_Severity" color="C1D8EE" x="64" y="816" />
+		<entity schema="Disease Model.INSTANCE" name="Doctor" color="C1D8EE" x="64" y="448" />
+		<entity schema="Disease Model.INSTANCE" name="Location" color="3986C1" x="96" y="208" />
+		<entity schema="Disease Model.INSTANCE" name="Medicine" color="3986C1" x="576" y="608" />
+		<entity schema="Disease Model.INSTANCE" name="Patient" color="3986C1" x="272" y="80" />
+		<entity schema="Disease Model.INSTANCE" name="Pharmacy_Inventory" color="C1D8EE" x="592" y="208" />
+		<entity schema="Disease Model.INSTANCE" name="Prescription" color="C1D8EE" x="480" y="400" />
+		<group name="Patient" color="FFFF4D" >
+			<entity schema="Disease Model.INSTANCE" name="Patient" />
+			<entity schema="Disease Model.INSTANCE" name="Location" />
+		</group>
+		<group name="Diagnosis" color="C4E0F9" >
+			<entity schema="Disease Model.INSTANCE" name="Medicine" />
+			<entity schema="Disease Model.INSTANCE" name="Disease_Severity" />
+			<entity schema="Disease Model.INSTANCE" name="Doctor" />
+			<entity schema="Disease Model.INSTANCE" name="Disease" />
+			<entity schema="Disease Model.INSTANCE" name="Diagnosis" />
+			<entity schema="Disease Model.INSTANCE" name="Prescription" />
+		</group>
+		<group name="Pharmacy" color="B3E6B3" >
+			<entity schema="Disease Model.INSTANCE" name="Pharmacy_Inventory" />
+		</group>
+	</layout>
+</project>

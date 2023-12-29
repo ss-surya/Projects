@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PostgreSQL" id="Project-200b" database="PostgreSQL" >
+	<schema name="disease_dw" >
+		<table name="date_dim" row_count="0" >
+			<column name="date_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo><![CDATA[nextval('disease_dw.date_dim_date_id_seq'::regclass)]]></defo>
+			</column>
+			<column name="date" type="date" length="13" decimal="0" jt="91" mandatory="y" />
+			<column name="year" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="month" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="day" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="date_dim_pkey" unique="PRIMARY_KEY" >
+				<column name="date_id" />
+			</index>
+		</table>
+		<table name="diagnosis_fact" >
+			<column name="location_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="patient_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="doctor_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="disease_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="prescription_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="visit_date_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="disease_severity_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="weight_kg" type="numeric" length="10" decimal="2" jt="2" mandatory="y" />
+			<column name="temperature_f" type="numeric" length="10" decimal="2" jt="2" mandatory="y" />
+			<column name="systolic_blood_pressure_mmhg" type="numeric" length="10" decimal="2" jt="2" mandatory="y" />
+			<column name="diastolic_blood_pressure_mmhg" type="numeric" length="10" decimal="2" jt="2" mandatory="y" />
+			<index name="diagnosis_fact_pkey" unique="PRIMARY_KEY" >
+				<column name="location_id" />
+				<column name="patient_id" />
+				<column name="doctor_id" />
+				<column name="disease_id" />
+				<column name="prescription_id" />
+				<column name="visit_date_id" />
+				<column name="disease_severity_id" />
+			</index>
+			<fk name="diagnosis_fact_visit_date_id_fkey" to_schema="disease_dw" to_table="date_dim" >
+				<fk_column name="visit_date_id" pk="date_id" />
+			</fk>
+			<fk name="diagnosis_fact_disease_id_fkey" to_schema="disease_dw" to_table="disease_dim" >
+				<fk_column name="disease_id" pk="disease_id" />
+			</fk>
+			<fk name="diagnosis_fact_disease_severity_id_fkey" to_schema="disease_dw" to_table="disease_severity_dim" >
+				<fk_column name="disease_severity_id" pk="disease_severity_code" />
+			</fk>
+			<fk name="diagnosis_fact_doctor_id_fkey" to_schema="disease_dw" to_table="doctor_dim" >
+				<fk_column name="doctor_id" pk="doctor_id" />
+			</fk>
+			<fk name="diagnosis_fact_location_id_fkey" to_schema="disease_dw" to_table="location_dim" >
+				<fk_column name="location_id" pk="location_id" />
+			</fk>
+			<fk name="diagnosis_fact_patient_id_fkey" to_schema="disease_dw" to_table="patient_dim" >
+				<fk_column name="patient_id" pk="patient_id" />
+			</fk>
+			<fk name="diagnosis_fact_prescription_id_fkey" to_schema="disease_dw" to_table="prescription_dim" >
+				<fk_column name="prescription_id" pk="prescription_id" />
+			</fk>
+		</table>
+		<table name="disease_dim" row_count="0" >
+			<column name="disease_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="disease_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="disease_description" type="varchar" length="200" decimal="0" jt="12" mandatory="y" />
+			<index name="disease_dim_pkey" unique="PRIMARY_KEY" >
+				<column name="disease_id" />
+			</index>
+		</table>
+		<table name="disease_severity_dim" row_count="0" >
+			<column name="disease_severity_code" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="disease_severity_description" type="varchar" length="10" decimal="0" jt="12" mandatory="y" />
+			<index name="disease_severity_dim_pkey" unique="PRIMARY_KEY" >
+				<column name="disease_severity_code" />
+			</index>
+		</table>
+		<table name="doctor_dim" row_count="0" >
+			<column name="doctor_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="doctor_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="doctor_speciality" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="experience_years" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="doctor_dim_pkey" unique="PRIMARY_KEY" >
+				<column name="doctor_id" />
+			</index>
+		</table>
+		<table name="inventory_fact" >
+			<column name="inventory_date_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="medicine_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="instock_indicator" type="integer" length="10" decimal="0" jt="4" />
+			<index name="inventory_fact_pkey" unique="PRIMARY_KEY" >
+				<column name="inventory_date_id" />
+				<column name="medicine_id" />
+			</index>
+			<fk name="inventory_fact_inventory_date_id_fkey" to_schema="disease_dw" to_table="date_dim" >
+				<fk_column name="inventory_date_id" pk="date_id" />
+			</fk>
+			<fk name="inventory_fact_medicine_id_fkey" to_schema="disease_dw" to_table="medicine_dim" >
+				<fk_column name="medicine_id" pk="medicine_id" />
+			</fk>
+		</table>
+		<table name="location_dim" row_count="0" >
+			<column name="location_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="city_name" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<column name="state_name" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<column name="country_name" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<index name="location_dim_pkey" unique="PRIMARY_KEY" >
+				<column name="location_id" />
+			</index>
+		</table>
+		<table name="medicine_dim" row_count="0" >
+			<column name="medicine_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="medicine_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="dosage_description" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="medicine_manufacturer" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="active_ingredient_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<index name="medicine_dim_pkey" unique="PRIMARY_KEY" >
+				<column name="medicine_id" />
+			</index>
+		</table>
+		<table name="patient_dim" row_count="0" >
+			<column name="patient_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="patient_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="patient_age" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="patient_gender" type="varchar" length="10" decimal="0" jt="12" mandatory="y" />
+			<index name="patient_dim_pkey" unique="PRIMARY_KEY" >
+				<column name="patient_id" />
+			</index>
+		</table>
+		<table name="prescription_dim" >
+			<column name="prescription_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="prescription_line_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="medicine_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="prescribed_dosage_description" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<index name="prescription_dim_pkey" unique="PRIMARY_KEY" >
+				<column name="prescription_id" />
+			</index>
+			<fk name="prescription_dim_medicine_id_fkey" to_schema="disease_dw" to_table="medicine_dim" >
+				<fk_column name="medicine_id" pk="medicine_id" />
+			</fk>
+		</table>
+	</schema>
+	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.5.0.jar" driver_desc="Standard" host="localhost" port="5432" instance="Disease" user="postgres" passwd="cm9vdA==" useSystemProxy="false" />
+	<layout name="Main Layout" id="Layout-1a1a" show_relation="columns" >
+		<comment><![CDATA[Disease Data Warehouse]]></comment>
+		<entity schema="disease_dw" name="date_dim" color="3986C1" x="704" y="208" />
+		<entity schema="disease_dw" name="diagnosis_fact" color="3986C1" x="272" y="208" />
+		<entity schema="disease_dw" name="disease_dim" color="BED3F4" x="544" y="80" />
+		<entity schema="disease_dw" name="disease_severity_dim" color="BED3F4" x="64" y="464" />
+		<entity schema="disease_dw" name="doctor_dim" color="BED3F4" x="352" y="544" />
+		<entity schema="disease_dw" name="inventory_fact" color="3986C1" x="880" y="400" />
+		<entity schema="disease_dw" name="location_dim" color="BED3F4" x="48" y="272" />
+		<entity schema="disease_dw" name="medicine_dim" color="BED3F4" x="784" y="640" />
+		<entity schema="disease_dw" name="patient_dim" color="BED3F4" x="96" y="80" />
+		<entity schema="disease_dw" name="prescription_dim" color="3986C1" x="544" y="432" />
+		<group name="Healthcase DW" color="ECF0F7" >
+			<entity schema="disease_dw" name="location_dim" />
+			<entity schema="disease_dw" name="patient_dim" />
+			<entity schema="disease_dw" name="doctor_dim" />
+			<entity schema="disease_dw" name="disease_severity_dim" />
+			<entity schema="disease_dw" name="disease_dim" />
+			<entity schema="disease_dw" name="prescription_dim" />
+			<entity schema="disease_dw" name="medicine_dim" />
+			<entity schema="disease_dw" name="date_dim" />
+			<entity schema="disease_dw" name="inventory_fact" />
+		</group>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-35" show_column_type="y" show_relation="columns" >
+		<entity schema="disease_dw" name="date_dim" color="3986C1" x="1184" y="48" />
+		<entity schema="disease_dw" name="disease_dim" color="BED3F4" x="784" y="272" />
+		<entity schema="disease_dw" name="disease_severity_dim" color="BED3F4" x="784" y="624" />
+		<entity schema="disease_dw" name="doctor_dim" color="BED3F4" x="384" y="624" />
+		<entity schema="disease_dw" name="location_dim" color="BED3F4" x="96" y="624" />
+		<entity schema="disease_dw" name="medicine_dim" color="BED3F4" x="48" y="400" />
+		<entity schema="disease_dw" name="patient_dim" color="BED3F4" x="96" y="64" />
+		<script name="SQL Editor" id="Editor-42a" language="SQL" >
+			<string><![CDATA[SELECT
+	location_id, patient_id, doctor_id, disease_id, medicine_id, visit_date_id, disease_severity_id, weight_kg, temperature_f, 
+	systolic_blood_pressure_mmhg, diastolic_blood_pressure_mmhg, medicine_effectiveness_percent, instock_indicator
+FROM
+	disease_dw.disease_fact t;]]></string>
+		</script>
+		<query id="Query-23d7" name="Query Builder" >
+			<query_table schema="disease_dw" name="disease_dim" alias="dd" x="48" y="48" >
+				<column name="disease_id" />
+				<column name="disease_name" />
+				<column name="disease_description" />
+			</query_table>
+		</query>
+		<form name="Report" id="Report-16c7" template="Page" css="container-fluid" view="frame" >
+			<var name="samplePageNumber" type="4" value="0" mandatory="n" />
+			<var name="sampleRecordsPerPage" type="4" value="100" mandatory="n" />
+			<body name="Body" template="Grid" pos="0,0,0,0,f,f" layout="{{-2,-2,-2,-2,-1},{-2,-2,-2,-2}}" scroll="n" html="n" >
+				<cell type="label" name="Disease_fact Data" template="H3" pos="0,0,1,0,l,c" />
+				<cell type="chart" name="Pie" template="Pie" pos="0,1,4,1,l,c" max_records="20" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="location_id" type="4" />
+						<var name="patient_id" type="4" />
+						<var name="doctor_id" type="4" />
+						<var name="disease_id" type="4" />
+						<var name="medicine_id" type="4" />
+						<var name="visit_date_id" type="4" />
+						<var name="disease_severity_id" type="4" />
+						<var name="weight_kg" type="2" />
+						<var name="temperature_f" type="2" />
+						<var name="systolic_blood_pressure_mmhg" type="2" />
+						<var name="diastolic_blood_pressure_mmhg" type="2" />
+						<var name="medicine_effectiveness_percent" type="2" />
+						<var name="instock_indicator" type="4" />
+						<script ><![CDATA[SELECT * FROM disease_dw.disease_fact]]></script>
+					</form_script>
+					<param name="width" value="100%" />
+					<param name="v0" value="medicine_effectiveness_percent" />
+					<param name="title" value="Sample Chart" />
+					<param name="height" value="400px" />
+				</cell>
+				<tableview name="sample" template="Table" css="table table-striped table-sm table-hover" pos="0,2,4,2,f,f" layout="{{-2,-2,-2,-2,-2,-2,-2},{-2,-2}}" scroll="n" html="n" header_rows="1" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="location_id" type="4" />
+						<var name="patient_id" type="4" />
+						<var name="doctor_id" type="4" />
+						<var name="disease_id" type="4" />
+						<var name="medicine_id" type="4" />
+						<var name="visit_date_id" type="4" />
+						<var name="disease_severity_id" type="4" />
+						<var name="weight_kg" type="2" />
+						<var name="temperature_f" type="2" />
+						<var name="systolic_blood_pressure_mmhg" type="2" />
+						<var name="diastolic_blood_pressure_mmhg" type="2" />
+						<var name="medicine_effectiveness_percent" type="2" />
+						<var name="instock_indicator" type="4" />
+						<script ><![CDATA[SELECT * FROM disease_dw.disease_fact]]></script>
+					</form_script>
+					<cell type="label" name="location_id" pos="0,0,0,0,c,c" />
+					<cell type="label" name="patient_id" pos="1,0,1,0,c,c" />
+					<cell type="label" name="doctor_id" pos="2,0,2,0,c,c" />
+					<cell type="label" name="disease_id" pos="3,0,3,0,c,c" />
+					<cell type="label" name="medicine_id" pos="4,0,4,0,c,c" />
+					<cell type="label" name="visit_date_id" pos="5,0,5,0,c,c" />
+					<cell type="label" name="Button can open other pages." pos="6,0,6,0,c,c" />
+					<cell type="label" name="${location_id}" template="Plain" pos="0,1,0,1,l,c" />
+					<cell type="label" name="${patient_id}" template="Plain" pos="1,1,1,1,l,c" />
+					<cell type="label" name="${doctor_id}" template="Plain" pos="2,1,2,1,l,c" />
+					<cell type="label" name="${disease_id}" template="Plain" pos="3,1,3,1,l,c" />
+					<cell type="label" name="${medicine_id}" template="Plain" pos="4,1,4,1,l,c" />
+					<cell type="label" name="${visit_date_id}" template="Plain" pos="5,1,5,1,l,c" />
+					<cell type="button" name="More" template="Plain" css="btn btn-sm btn-secondary" pos="6,1,6,1,c,c" ref_id="Report-16c7" />
+				</tableview>
+				<cell type="href" name="" disabled="${samplePageNumber&lt;1}" pos="0,3,0,3,l,c" glyph="bi-chevron_double_left" ref_id="Report-16c7" >
+					<var name="samplePageNumber" value="0" />
+				</cell>
+				<cell type="href" name="" disabled="${samplePageNumber&lt;1}" pos="1,3,1,3,l,c" glyph="bi-chevron_left" ref_id="Report-16c7" >
+					<var name="samplePageNumber" value="${Math.max(0,samplePageNumber-1)}" />
+				</cell>
+				<cell type="label" name="Page ${samplePageNumber+1}" pos="2,3,2,3,l,c" />
+				<cell type="href" name="" disabled="${!sampleHasNextPage}" pos="3,3,3,3,l,c" glyph="bi-chevron_right" ref_id="Report-16c7" >
+					<var name="samplePageNumber" value="${( samplePageNumber+1 )}" />
+				</cell>
+			</body>
+		</form>
+	</layout>
+</project>
